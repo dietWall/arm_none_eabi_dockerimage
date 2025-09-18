@@ -1,5 +1,4 @@
 #! /usr/bin/env python3
-#### ! /home/dw/code/stm32/buildsystem/venv/bin/python3
 
 import docker
 import argparse
@@ -11,7 +10,6 @@ default_tag="stm32"
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    #versioning can happen trough git and dockerfile, actually no specific need for versioning the immage
     parser.add_argument("--build", help="builds the image", action='store_true',default=False)
     parser.add_argument("--run", help="starts the container", action='store_true', default=False)
     parser.add_argument("--stop", help=f"stopps any containers with the tag: {default_tag}", action='store_true', default=False)
@@ -41,7 +39,7 @@ if __name__ == '__main__':
     if args.build == True:    
         buildsystem_dir = repo_root
         print(f"building image in {buildsystem_dir}, tagging with: {args.tag}")
-        client.images.build(path=buildsystem_dir, tag=f"{args.tag}:1.0", buildargs={"user":args.user, "uid": f"{args.uid}", "gid":f"{args.gid}"})
+        client.images.build(path=buildsystem_dir, tag=f"{args.tag}", buildargs={"user":args.user, "uid": f"{args.uid}", "gid":f"{args.gid}"})
 
     if args.run == True:
         from docker.types import Mount
@@ -50,6 +48,5 @@ if __name__ == '__main__':
         print(result.logs())
         print(f"container is running with the name: {result.name}, enter bash with:")
         print(f"docker exec -it {result.name} bash")
-
 
     print("Done, exiting")
