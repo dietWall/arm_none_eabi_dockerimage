@@ -8,11 +8,39 @@ from git_utils import *
 
 default_tag="stm32"
 
+
+def get_container():
+    client = docker.from_env()
+    containers = client.containers.list(all=True, filters={"ancestor": f"{default_tag}"})
+    print(f"{len(containers)} of containers found with image: {default_tag}")
+    if len(containers) == 0:
+        raise Exception(f"No containers found with image: {default_tag}, please start one with --run")
+    if len(containers) > 1:
+        print(f"WARN: Multiple containers found with image: {default_tag}, using the first one, id: {containers[0].id}")
+    return containers[0]
+
+def run_tests():
+    #get the container id
+    id = get_container().id
+    print(f"running tests in container: {id}")
+    repo_root = get_repo_root()
+    #call pytest with on host with container id
+    import pytest
+    retcode = pytest.main(["-v", "-s", f"{repo_root}/test", f"--container_id={id}"])
+    if retcode != 0:
+        raise Exception(f"Tests failed with code: {retcode}")
+    print("All tests passed")
+
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    #next time an operation is added, make it a list, eg something like: --operation build run test stop
     parser.add_argument("--build", help="builds the image", action='store_true',default=False)
     parser.add_argument("--run", help="starts the container", action='store_true', default=False)
     parser.add_argument("--stop", help=f"stopps any containers with the tag: {default_tag}", action='store_true', default=False)
+    parser.add_argument("--test", help="runs the tests", action='store_true', default=False)
+
     parser.add_argument("--user", help="sets the username for the image user, defaults to current user if ommited", default="developer")
     parser.add_argument("--uid", help="sets the uid for the image user, defaults to current user if ommited", default=os.getuid())
     parser.add_argument("--gid", help="sets the gid for the image user, defaults to current user if ommited", default=os.getgid())
@@ -28,8 +56,8 @@ if __name__ == '__main__':
     client = docker.from_env()
     
     if args.stop == True:
-        print(f"stopping all containers with image = {default_tag}:1.0")
-        containers = client.containers.list(all=True, filters={"ancestor": f"{default_tag}:1.0"})
+        print(f"stopping all containers with image = {default_tag}")
+        containers = client.containers.list(all=True, filters={"ancestor": f"{default_tag}"})
         for c in containers:
             print(f"container: {c.id}")
             c.stop()
@@ -44,9 +72,12 @@ if __name__ == '__main__':
     if args.run == True:
         from docker.types import Mount
         repo_mount = Mount(target=f"/home/{args.user}/code", source=repo_root, type='bind')
-        result = client.containers.run(image=f"{args.tag}:1.0", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=True)
+        result = client.containers.run(image=f"{args.tag}", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=True)
         print(result.logs())
         print(f"container is running with the name: {result.name}, enter bash with:")
         print(f"docker exec -it {result.name} bash")
+
+    if args.test == True:
+        run_tests()
 
     print("Done, exiting")
