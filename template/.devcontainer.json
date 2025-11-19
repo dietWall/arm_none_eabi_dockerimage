@@ -1,0 +1,17 @@
+{
+    "name": "STM32 Dev Container",
+    "image": "stm32",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            "extensions": [
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools-extension-pack"
+            ]
+        }
+    },
+    "workspaceFolder": "/home/developer/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/developer/workspace,type=bind,consistency=bind"
+}
