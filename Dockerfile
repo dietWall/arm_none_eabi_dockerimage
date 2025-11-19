@@ -21,7 +21,7 @@ USER ${user}
 WORKDIR /home/${user}
 
 #install other required tools
-RUN sudo apt install cmake make binutils git python3 gcc-arm-none-eabi -y
+RUN sudo apt install cmake make binutils git python3 gcc-arm-none-eabi gdb file -y
 
 ADD --chown=${uid}:${gid} toolchain /home/${user}/toolchain
 
