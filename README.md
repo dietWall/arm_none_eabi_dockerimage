@@ -5,7 +5,7 @@ After building, the image can be reused to build and debug STM32 applications wi
 You need:
 - A PC with Windows and Windows Subsystem for Linux (WSL) installed
 - Inside WSL you need at least: git, docker, python3 with venv
-All other tools should be installed and configured automatically (in theory, please contact me if something fails :) ).
+All other tools should be installed and configured automatically (in theory, please contact me if something fails).
 
 
 # Usage
@@ -25,7 +25,9 @@ git clone https://github.com/dietWall/arm_none_eabi_dockerimage && cd arm_none_e
 ```bash
 ./container_operations.py --run
 ```
-this starts a container in the background, leaves it running, so you can enter it with common docker commands. Optionally run
+this starts a container in the background, leaves it running, so you can enter it with common docker commands (one is printed at the end of the operation).  
+
+Optionally run:
 ```bash
 ./container_operations.py --run --test
 ```
@@ -40,9 +42,10 @@ Other options for container_operations.py, all are optional and have defaults se
 --uid [UID] : provides a uid for the docker image, default is the currently logged in user  
 --gid [UID] : provides a group id for the docker image, default is the currently logged in user  
 
-## Operations:
---build: builds the image
---stop: stops all container with the default (or provided with --tag) tag
+## Other Operations:
+--build: builds the image  
+--stop: stops all container with the default (or provided with --tag) tag  
+--test: starts a pytest process that compiles a small application in the container (container must be already running!)
 
 The Image can be reused in different repositories by copying template/devcontainer.json to <your-repo-root>/.devcontainer/devcontainer.json
 
