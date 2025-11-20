@@ -34,7 +34,7 @@ to run a simple compilation test.
 ## container_operations.py
 This is the main script, that implements the functionality. 
 
-Other options for container_operations.py, all are optional and have defaults set:
+Other options for container_operations.py, all are optional and have defaults set:  
 --tag IMAGE_TAG : tags the image with given argument. default is stm32  
 --user USERNAME : provides a username for the image, default=developer  
 --uid [UID] : provides a uid for the docker image, default is the currently logged in user  
