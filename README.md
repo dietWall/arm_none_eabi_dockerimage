@@ -47,7 +47,7 @@ Other options for container_operations.py, all are optional and have defaults se
 --stop: stops all container with the default (or provided with --tag) tag  
 --test: starts a pytest process that compiles a small application in the container (container must be already running!)
 
-The Image can be reused in different repositories by copying template/devcontainer.json to <your-repo-root>/.devcontainer/devcontainer.json
+The Image can be reused in different repositories by copying template/devcontainer.json to your-repo-root/.devcontainer/devcontainer.json
 
 ## Developing applications:
 You need VSCode with devcontainer extension installed: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
