@@ -31,16 +31,24 @@ this starts a container in the background, leaves it running, so you can enter i
 ```
 to run a simple compilation test.
 
-Other options for container_operations.py, all are optional and have defaults set:
---tag IMAGE_TAG : tags the image with given Argument. default is stm32
---user USERNAME : provides a username for the image, default=developer
---uid [UID] : provides a uid for the docker image, default is the currently logged in user
---gid [UID] : provides a group id for the docker image, default is the currently logged in user
+## container_operations.py
+This is the main script, that implements the functionality. 
 
-Operations:
+Other options for container_operations.py, all are optional and have defaults set:
+--tag IMAGE_TAG : tags the image with given argument. default is stm32  
+--user USERNAME : provides a username for the image, default=developer  
+--uid [UID] : provides a uid for the docker image, default is the currently logged in user  
+--gid [UID] : provides a group id for the docker image, default is the currently logged in user  
+
+## Operations:
 --build: builds the image
 --stop: stops all container with the default (or provided with --tag) tag
 
-The Image can be reused in different repositories by copying template/devcontainer.json to <your-repo-root>/.devcontainer.json
+The Image can be reused in different repositories by copying template/devcontainer.json to <your-repo-root>/.devcontainer/devcontainer.json
+
+## Developing applications:
+You need VSCode with devcontainer extension installed: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+
+After copying/creating devcontainer file, you need to open your repository root directory and run vscode. If everything works out, you should see a notification whether you want to reopen the directory inside the devcontainer definition.
 
   
