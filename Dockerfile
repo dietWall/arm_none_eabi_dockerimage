@@ -1,4 +1,9 @@
-FROM debian
+#in latest debian, arm-none-eabi is version 15. which is based on binutils 2.44
+# that requires some changes in example project,
+# my tests linking failed similar to: (https://community.arm.com/support-forums/f/compilers-and-libraries-forum/57077/binutils-2-44-and-gcc-15-1-0---dangerous-relocation-unsupported-relocation-error-when-trying-to-build-u-boot)
+# so we need to fix arm-none-eabi to version 15:12.2.rel1-1, which is default on bookworm
+# once we found a solution to the example project, we can upgrade debian
+FROM debian:bookworm
 
 ARG user=developer
 ARG uid=1000
