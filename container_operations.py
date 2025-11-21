@@ -67,7 +67,14 @@ if __name__ == '__main__':
     if args.build == True:    
         buildsystem_dir = repo_root
         print(f"building image in {buildsystem_dir}, tagging with: {args.tag}")
-        client.images.build(path=buildsystem_dir, tag=f"{args.tag}", buildargs={"user":args.user, "uid": f"{args.uid}", "gid":f"{args.gid}"})
+        image, build_logs = client.images.build(path=buildsystem_dir, tag=f"{args.tag}", buildargs={"user":args.user, "uid": f"{args.uid}", "gid":f"{args.gid}"})
+        # for streaming the logs, we need to use client.build instead of client.images.build, as of now it is good enough
+        for chunk in build_logs:
+            if 'stream' in chunk:
+                for line in chunk['stream'].splitlines():
+                    print(line)
+
+        print(f"Built image with id: {image.id}")
 
     if args.run == True:
         from docker.types import Mount
