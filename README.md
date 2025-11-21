@@ -4,8 +4,9 @@ After building, the image can be reused to build and debug STM32 applications wi
 # Prerequisites
 You need:
 - A PC with Windows and Windows Subsystem for Linux (WSL) installed
-- Inside WSL you need at least: git, docker, python3 with venv
+- Inside WSL you need at least: git, docker, python3 with venv and pip
 All other tools should be installed and configured automatically (in theory, please contact me if something fails).
+- user in WSL must be configured to run docker commands without sudo: https://docs.docker.com/engine/install/linux-postinstall
 
 
 # Usage
@@ -16,13 +17,14 @@ git clone https://github.com/dietWall/arm_none_eabi_dockerimage && cd arm_none_e
 ```
 
 - run setup_env.sh
-  This creates an virtual environment, installs missing python libs in venv and starts to build the docker image
+  This creates an virtual environment, installs missing python libs in venv and builds the docker image
 ```bash
 ./setup_env.sh
 ```
 
 - You can test the container by running 
 ```bash
+source venv/bin/activate
 ./container_operations.py --run
 ```
 this starts a container in the background, leaves it running, so you can enter it with common docker commands (one is printed at the end of the operation).  
