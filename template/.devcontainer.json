@@ -13,5 +13,6 @@
         }
     },
     "workspaceFolder": "/home/developer/workspace",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/developer/workspace,type=bind,consistency=bind"
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/developer/workspace,type=bind,consistency=bind",
+    "postStartCommand" : "python3 -m venv tests/.venv && source tests/.venv/bin/activate && pip install -r tests/requirements.txt"
 }

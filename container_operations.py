@@ -24,13 +24,12 @@ def run_tests():
     id = get_container().id
     print(f"running tests in container: {id}")
     repo_root = get_repo_root()
-    #call pytest with on host with container id
+    #call pytest on host with container id
     import pytest
     retcode = pytest.main(["-v", "-s", f"{repo_root}/test", f"--container_id={id}"])
     if retcode != 0:
         raise Exception(f"Tests failed with code: {retcode}")
     print("All tests passed")
-
 
 
 if __name__ == '__main__':
@@ -67,14 +66,18 @@ if __name__ == '__main__':
     if args.build == True:    
         buildsystem_dir = repo_root
         print(f"building image in {buildsystem_dir}, tagging with: {args.tag}")
-        image, build_logs = client.images.build(path=buildsystem_dir, tag=f"{args.tag}", buildargs={"user":args.user, "uid": f"{args.uid}", "gid":f"{args.gid}"})
-        # for streaming the logs, we need to use client.build instead of client.images.build, as of now it is good enough
-        for chunk in build_logs:
-            if 'stream' in chunk:
-                for line in chunk['stream'].splitlines():
-                    print(line)
-
-        print(f"Built image with id: {image.id}")
+        try:
+            image, build_logs = client.images.build(path=buildsystem_dir, tag=f"{args.tag}", buildargs={"user":args.user, "uid": f"{args.uid}", "gid":f"{args.gid}"})
+            # for streaming the logs in realtime, we need to use client.build instead of client.images.build, as of now it is good enough
+            # this one buffers and prints it afterwards
+            for chunk in build_logs:
+                if 'stream' in chunk:
+                    for line in chunk['stream'].splitlines():
+                        print(line)
+            print(f"Built image with id: {image.id}")
+        except Exception as err:
+            print(f"error on build: {err}")
+                
 
     if args.run == True:
         from docker.types import Mount
