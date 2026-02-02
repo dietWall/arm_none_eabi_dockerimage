@@ -1,13 +1,16 @@
 import pytest
 
 
+def print_container_output(output):
+    for l in output.output.decode("utf-8").splitlines():
+        print(l)
+
 @pytest.mark.parametrize("tool", ["gdb-multiarch", "cmake", "arm-none-eabi-gcc"])
 def test_tools_available(container, tool):
     print("")   #newline for readability
-    
+
     gdb_output = container.exec_run(cmd=f"{tool} --version")
-    for l in gdb_output.output.decode("utf-8").splitlines():
-        print(l)
+    print_container_output(gdb_output)
     assert gdb_output.exit_code == 0, f"gdb exit code: {gdb_output.exit_code}, output: {gdb_output.output.decode("utf-8").splitlines()}"
 
 
@@ -20,8 +23,11 @@ def test_compile(container,
     container.exec_run(cmd="rm -rf build/*")
     #make sure build directory exists
     container.exec_run(cmd="mkdir -p build")
+    
+    output = container.exec_run(cmd="ls -lRa build/")
+    print_container_output(output)
 
-    compile_result = container.exec_run(cmd=f"cmake -S {source_path} -B build -DCMAKE_TOOLCHAIN_FILE=/home/developer/toolchain/arm-none-eabi-gcc.cmake")
+    compile_result = container.exec_run(cmd=f"cmake -S {source_path} -B build/ -DCMAKE_TOOLCHAIN_FILE=/home/developer/toolchain/arm-none-eabi-gcc.cmake")
     assert compile_result.exit_code == 0, f"cmake failed with output: {compile_result.output.decode('utf-8')}"
     print("cmake succeeded")
     make_result = container.exec_run(cmd="make -C build")
