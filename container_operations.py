@@ -20,13 +20,10 @@ def get_container():
     return containers[0]
 
 def run_tests():
-    #get the container id
-    id = get_container().id
-    print(f"running tests in container: {id}")
     repo_root = get_repo_root()
     #call pytest on host with container id
     import pytest
-    retcode = pytest.main(["-v", "-s", f"{repo_root}/test", f"--container_id={id}"])
+    retcode = pytest.main(["-v", "-s", f"{repo_root}/test"])
     if retcode != 0:
         raise Exception(f"Tests failed with code: {retcode}")
     print("All tests passed")
@@ -43,15 +40,9 @@ if __name__ == '__main__':
     parser.add_argument("--user", help="sets the username for the image user, defaults to current user if ommited", default="developer")
     parser.add_argument("--uid", help="sets the uid for the image user, defaults to current user if ommited", default=os.getuid())
     parser.add_argument("--gid", help="sets the gid for the image user, defaults to current user if ommited", default=os.getgid())
-
     parser.add_argument("--tag", help="defines the tag for the image", default=default_tag)
     args = parser.parse_args()
-    print(f"Arguments: stop == {args.stop},  build == {args.build}, run == {args.run}")
-    print(f"full args: {args}")
-    
     repo_root = get_repo_root()
-    print(f"Repository root is: {repo_root}")
-
     client = docker.from_env()
     
     if args.stop == True:
