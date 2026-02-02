@@ -17,8 +17,6 @@ source $venv_dir/bin/activate
 echo "installing host requirements"
 pip3 install -r $repo_root/requirements_host.txt
 
-echo "requirements installed, start building docker image"
+echo "done, requirements installed"
 
-$repo_root/container_operations.py --build
 
-echo "done"
