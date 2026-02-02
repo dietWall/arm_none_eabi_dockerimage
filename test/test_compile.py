@@ -22,7 +22,7 @@ def test_compile(container,
     #make sure build directory is clean
     container.exec_run(cmd="rm -rf build/*")
     #make sure build directory exists
-    container.exec_run(cmd="mkdir -p build")
+    print_container_output(container.exec_run(cmd="mkdir -p build"))
     
     output = container.exec_run(cmd="pwd")
     print_container_output(output)
