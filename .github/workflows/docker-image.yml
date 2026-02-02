@@ -18,7 +18,7 @@ jobs:
       run: ./setup_env.sh
 
     - name: Build the Docker image
-      run: source venv/bin/activate && ./container_operations.py --build --UID 1000 --GID 1000 
+      run: source venv/bin/activate && ./container_operations.py --build --uid 1000 --gid 1000
 
     - name: run the tests
       run: source venv/bin/activate && ./container_operations.py --run --test
