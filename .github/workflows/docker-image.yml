@@ -21,13 +21,7 @@ jobs:
       run: source venv/bin/activate && ./container_operations.py --build --uid 1000 --gid 1000
 
     - name: run the tests
-      uses: pavelzw/pytest-action@v2
-      with: 
-        verbose: true
-        emoji: true
-        job-summary: true
-        click-to-expand: true
-        report-title: 'Test Report'
+      run: source venv/bin/activate && pytest -s -v test/
 
 
 #    - name: stop the container
