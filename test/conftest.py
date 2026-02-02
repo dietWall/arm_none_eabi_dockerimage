@@ -15,7 +15,7 @@ def get_repo_root() -> str:
 def run_container(img):
     from docker.types import Mount
     client = docker.from_env()
-    repo_mount = Mount(target=f"/home/developer/", source=get_repo_root(), type='bind')
+    repo_mount = Mount(target=f"/home/developer/code", source=get_repo_root(), type='bind')
     result = client.containers.run(image=default_tag, 
                                    detach=True, stdout=True, stdin_open=True, 
                                    mounts=[repo_mount],
