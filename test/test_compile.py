@@ -24,6 +24,10 @@ def test_compile(container,
     #make sure build directory exists
     container.exec_run(cmd="mkdir -p build")
     
+    output = container.exec_run(cmd="pwd")
+    print_container_output(output)
+    output = container.exec_run(cmd="ls -la")
+    print_container_output(output)
     output = container.exec_run(cmd="ls -lRa build/")
     print_container_output(output)
 
