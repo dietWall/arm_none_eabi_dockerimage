@@ -14,5 +14,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Create Environment
+      run: ./setup_env.sh
+
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: ./container_operations.py --build --UID 1000 --GID 1000 
+
+    - name: run the tests
+      run: ./container_operations.py --run --test
+
+    - name: stop the container
+      run: ./container_operations.py --stop
