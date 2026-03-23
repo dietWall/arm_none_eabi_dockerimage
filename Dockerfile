@@ -28,7 +28,7 @@ WORKDIR /home/${user}
 #socat requires an additional update! There is an http download link in debian
 RUN sudo apt update                 
 # #install other required tools
-RUN sudo apt install cmake make binutils git python3 gcc-arm-none-eabi file gdb-multiarch python3.11-venv socat -y
+RUN sudo apt install cmake make binutils git python3 python3-pip gcc-arm-none-eabi file gdb-multiarch python3.11-venv socat -y
 
 #additional gdb-multiarch configuration: this tells gdb it is safe to load script from workspace directory
 # one gdbinit file is inside workspace/tests/
@@ -37,5 +37,7 @@ RUN mkdir -p /home/${user}/.config/gdb && \
     echo "add-auto-load-safe-path /home/${user}/workspace/tests/.gdbinit" > /home/${user}/.config/gdb/gdbinit
 
 ADD --chown=${uid}:${gid} toolchain /home/${user}/toolchain
+
+WORKDIR /workspace
 
 CMD ["bash"]

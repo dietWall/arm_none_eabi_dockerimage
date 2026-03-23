@@ -16,9 +16,6 @@ else ()
     set(CMAKE_EXE_LINKER_FLAGS_INIT "--specs=nosys.specs")
 endif ()
 
-add_compile_options(-mcpu=cortex-m7)
-#
-
 set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}gcc)
 set(CMAKE_ASM_COMPILER ${CMAKE_C_COMPILER})
 set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}g++)
@@ -55,3 +52,6 @@ set(CMAKE_FIND_ROOT_PATH ${BINUTILS_PATH})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+include_directories(/home/developer/toolchain/include)
+link_directories(/home/developer/toolchain/lib)

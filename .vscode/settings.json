@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/home/dw/code/arm_none_eabi_dockerimage/test/lib"
+    "cmake.sourceDirectory": "/home/dw/code/arm_none_eabi_dockerimage/test/lib",
+    "ansible.python.interpreterPath": "/home/dw/code/arm_none_eabi_dockerimage/venv/bin/python"
 }
