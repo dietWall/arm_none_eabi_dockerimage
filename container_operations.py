@@ -6,7 +6,7 @@ import os
 
 from git_utils import *
 
-default_tag="arm_gcc_image"
+default_tag="ghcr.io/dietwall/arm_gcc_image"
 
 
 def get_container(tag: str = default_tag):
