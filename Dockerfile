@@ -8,6 +8,11 @@ FROM debian:bookworm
 ARG user=developer
 ARG uid=1000
 ARG gid=1000
+ARG version=0.1.0
+
+LABEL org.opencontainers.image.source https://github.com/dietWall/arm_none_eabi_dockerimage
+LABEL org.opencontainers.image.version "${version}"
+LABEL org.opencontainers.image.description "Docker image with arm-none-eabi-gcc, cmake, gdb-multiarch and other tools for embedded development"
 
 #basic setup
 RUN apt-get update

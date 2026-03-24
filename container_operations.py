@@ -6,22 +6,22 @@ import os
 
 from git_utils import *
 
-default_tag="stm32"
+default_tag="arm_gcc_image"
 
 
-def get_container():
+def get_container(tag: str = default_tag):
     client = docker.from_env()
-    containers = client.containers.list(all=True, filters={"ancestor": f"{default_tag}"})
-    print(f"{len(containers)} of containers found with image: {default_tag}")
+    containers = client.containers.list(all=True, filters={"ancestor": f"{tag}"})
+    print(f"{len(containers)} of containers found with image: {tag}")
     if len(containers) == 0:
-        raise Exception(f"No containers found with image: {default_tag}, please start one with --run")
+        raise Exception(f"No containers found with image: {tag}, please start one with --run")
     if len(containers) > 1:
-        print(f"WARN: Multiple containers found with image: {default_tag}, using the first one, id: {containers[0].id}")
+        print(f"WARN: Multiple containers found with image: {tag}, using the first one, id: {containers[0].id}")
     return containers[0]
 
-def run_tests():
+def run_tests(tag: str = default_tag):
     #get the container id
-    id = get_container().id
+    id = get_container(tag=tag).id
     print(f"running tests in container: {id}")
     repo_root = get_repo_root()
     #call pytest on host with container id
@@ -45,12 +45,9 @@ if __name__ == '__main__':
 
     parser.add_argument("--tag", help="defines the tag for the image", default=default_tag)
     args = parser.parse_args()
-
     print(f"Arguments: operation == {args.operation}")
-    print(f"full args: {args}")
-    
+    print(f"full args: {args}")    
     repo_root = get_repo_root()
-    print(f"Repository root is: {repo_root}")
 
     client = docker.from_env()
     
@@ -61,7 +58,6 @@ if __name__ == '__main__':
             print(f"container: {c.id}")
             c.stop()
         print("Stopped all containers")
-        
 
     if "build" in args.operation[0]:
         buildsystem_dir = repo_root
@@ -77,7 +73,6 @@ if __name__ == '__main__':
             print(f"Built image with id: {image.id}")
         except Exception as err:
             print(f"error on build: {err}")
-                
 
     if "run" in args.operation[0]:
         from docker.types import Mount
@@ -88,6 +83,6 @@ if __name__ == '__main__':
         print(f"docker exec -it {result.name} bash")
 
     if "test" in args.operation[0]:
-        run_tests()
+        run_tests(tag=args.tag)
 
     print("Done, exiting")
