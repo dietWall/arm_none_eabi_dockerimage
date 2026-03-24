@@ -4,7 +4,7 @@ import docker
 
 def test_compile(container_id, source_path="/home/developer/code/test/lib"):
     print("")   #newline for readability
-    print(f"testing in container {container_id}")
+    print(f"testing in container {container_id}, source path: {source_path}")
     client = docker.from_env()
     container = client.containers.get(container_id)
     #make sure build directory is clean
