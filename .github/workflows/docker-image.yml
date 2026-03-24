@@ -18,7 +18,14 @@ jobs:
     - name: Set up Environment
       run: ./setup_env.sh
 
-
     - name: Build Docker image
       run: |
         source venv/bin/activate && python3 container_operations.py -o build --uid 1000 --gid 1000 --user developer
+    
+    - name: Run Docker container and test
+      run: |
+        source venv/bin/activate && python3 container_operations.py -o run test
+
+    - name: Stop Container
+      run: |
+        source venv/bin/activate && python3 container_operations.py -o stop
