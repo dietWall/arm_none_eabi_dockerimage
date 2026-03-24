@@ -21,4 +21,4 @@ jobs:
 
     - name: Build Docker image
       run: |
-        source venv/bin/activate && ython3 container_operations.py -o build --uid 1000 --gid 1000 --user developer
+        source venv/bin/activate && python3 container_operations.py -o build --uid 1000 --gid 1000 --user developer
