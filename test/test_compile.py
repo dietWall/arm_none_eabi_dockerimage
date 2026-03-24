@@ -7,6 +7,9 @@ def test_compile(container_id, source_path="/home/developer/code/test/lib"):
     print(f"testing in container {container_id}, source path: {source_path}")
     client = docker.from_env()
     container = client.containers.get(container_id)
+    dir_contents = container.exec_run(cmd="ls -la", workdir=source_path)
+    print(f"Contents of {source_path} in container:")
+    print(dir_contents.output.decode('utf-8'))
     #make sure build directory is clean
     container.exec_run(cmd="rm -rf build/*", workdir=source_path)
     #make sure build directory exists
