@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "feature/*" ]
   pull_request:
     branches: [ "master" ]
 
@@ -14,5 +14,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    
+    - name: Set up Environment
+      run: ./setup_environment.sh
+
+
+    - name: Build Docker image
+      run: |
+        python3 container_operations.py -o build --uid 1000 --gid 1000 --user developer
