@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v5
     
     - name: Set up Environment
-      run: ./setup_environment.sh
+      run: ./setup_env.sh
 
 
     - name: Build Docker image
