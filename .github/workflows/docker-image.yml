@@ -9,7 +9,7 @@ on:
 jobs:
 
   build:
-
+    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
       if: (!cancelled())
       with:
         files: |
-          test_results_*.xml
+          test_results*.xml
 
     - name: Stop Container
       run: |
