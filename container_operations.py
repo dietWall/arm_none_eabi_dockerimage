@@ -35,6 +35,11 @@ def run_tests():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     #next time an operation is added, make it a list, eg something like: --operation build run test stop
+    parser.add_argument("--operation", "-o",
+        help="operation to perform, can be one of: build, run, stop, test", 
+        choices=["build", "run", "stop", "test", "push"],
+        action="append", nargs="+", required=True)
+
     parser.add_argument("--build", help="builds the image", action='store_true',default=False)
     parser.add_argument("--run", help="starts the container", action='store_true', default=False)
     parser.add_argument("--stop", help=f"stopps any containers with the tag: {default_tag}", action='store_true', default=False)
@@ -46,7 +51,8 @@ if __name__ == '__main__':
 
     parser.add_argument("--tag", help="defines the tag for the image", default=default_tag)
     args = parser.parse_args()
-    print(f"Arguments: stop == {args.stop},  build == {args.build}, run == {args.run}")
+
+    print(f"Arguments: stop == {args.stop},  build == {args.build}, run == {args.run}, operation == {args.operation}")
     print(f"full args: {args}")
     
     repo_root = get_repo_root()
@@ -54,7 +60,7 @@ if __name__ == '__main__':
 
     client = docker.from_env()
     
-    if args.stop == True:
+    if args.stop == True or "stop" in args.operation[0]:
         print(f"stopping all containers with image = {default_tag}")
         containers = client.containers.list(all=True, filters={"ancestor": f"{default_tag}"})
         for c in containers:
@@ -63,7 +69,7 @@ if __name__ == '__main__':
         print("Stopped all containers")
         
 
-    if args.build == True:    
+    if args.build == True or "build" in args.operation[0]:
         buildsystem_dir = repo_root
         print(f"building image in {buildsystem_dir}, tagging with: {args.tag}")
         try:
@@ -79,7 +85,7 @@ if __name__ == '__main__':
             print(f"error on build: {err}")
                 
 
-    if args.run == True:
+    if args.run == True or "run" in args.operation[0]:
         from docker.types import Mount
         repo_mount = Mount(target=f"/home/{args.user}/code", source=repo_root, type='bind')
         result = client.containers.run(image=f"{args.tag}", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=True)
@@ -87,7 +93,7 @@ if __name__ == '__main__':
         print(f"container is running with the name: {result.name}, enter bash with:")
         print(f"docker exec -it {result.name} bash")
 
-    if args.test == True:
+    if args.test == True or "test" in args.operation[0]:
         run_tests()
 
     print("Done, exiting")
