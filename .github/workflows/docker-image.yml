@@ -46,4 +46,4 @@ jobs:
     
     - name: Push Docker image to GitHub Container Registry
       run: |
-        docker push ghcr.io/${{ github.repository_owner }}/arm_gcc_image:latest
+        docker push ghcr.io/dietwall/arm_gcc_image:latest
