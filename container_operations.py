@@ -26,7 +26,7 @@ def run_tests():
     repo_root = get_repo_root()
     #call pytest on host with container id
     import pytest
-    retcode = pytest.main(["-v", "-s", f"{repo_root}/test", f"--container_id={id}"])
+    retcode = pytest.main(["-v", "-s", f"{repo_root}/test", f"--container_id={id}", f"--junitxml={repo_root}/test_results.xml"])
     if retcode != 0:
         raise Exception(f"Tests failed with code: {retcode}")
     print("All tests passed")
@@ -34,7 +34,6 @@ def run_tests():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    #next time an operation is added, make it a list, eg something like: --operation build run test stop
     parser.add_argument("--operation", "-o",
         help="operation to perform, can be one of: build, run, stop, test", 
         choices=["build", "run", "stop", "test", "push"],

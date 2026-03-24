@@ -25,6 +25,13 @@ jobs:
     - name: Run Docker container and test
       run: |
         source venv/bin/activate && python3 container_operations.py -o run test
+    
+    - name: publish test_results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: (!cancelled())
+      with:
+        files: |
+          test_results_*.xml
 
     - name: Stop Container
       run: |
