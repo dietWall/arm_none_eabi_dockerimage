@@ -1,5 +1,4 @@
-name: Docker Image CI
-
+name: build and test Docker image
 on:
   push:
     branches: [ "feature/*" ]
@@ -10,7 +9,7 @@ on:
 jobs:
 
   build:
-    permissions: write-all
+    
     runs-on: ubuntu-latest
 
     steps:
