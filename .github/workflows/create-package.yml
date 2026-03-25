@@ -25,6 +25,9 @@ jobs:
             path: arm_gcc_image.tar
         - name: is this a zipfile?
           run: ls -la 
+        
+        - name: is this a zipfile?
+          run: ls -la arm_gcc_image.tar
 
         - name: Docker load
           run: |
