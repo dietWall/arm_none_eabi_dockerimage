@@ -22,7 +22,7 @@ jobs:
           uses: actions/download-artifact@v7
           with:
             name: arm_gcc_image
-            path: arm_gcc_image.tar
+
         - name: is this a zipfile?
           run: ls -la 
         
