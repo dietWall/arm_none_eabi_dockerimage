@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Push Docker Image
 
 on:
     workflow_dispatch:
@@ -7,6 +7,8 @@ jobs:
     build-and-push:
         runs-on: ubuntu-latest
         steps:
+        - uses: ./.github/workflows/docker-image.yml
+        
         - name: Checkout code
           uses: actions/checkout@v4
 
