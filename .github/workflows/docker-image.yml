@@ -36,8 +36,8 @@ jobs:
     
     - name: Save Docker image to tar
       run: |
-        docker save ghcr.io/dietwall/arm_gcc_image:latest -o arm_gcc_image.tar
-        
+        docker save ghcr.io/dietwall/arm_gcc_image:latest > arm_gcc_image.tar
+
     - name: Temporarily save Docker image
       uses: actions/upload-artifact@v7
       with:
