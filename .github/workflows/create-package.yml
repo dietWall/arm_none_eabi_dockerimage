@@ -12,6 +12,7 @@ jobs:
     push:
         permissions: write-all
         runs-on: ubuntu-latest
+        needs: build-and-test
         steps:
 
         - uses: actions/checkout@v5
