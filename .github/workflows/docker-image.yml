@@ -5,6 +5,7 @@ on:
     branches: [ "feature/*" ]
   pull_request:
     branches: [ "master" ]
+  workflow_call:
 
 jobs:
 
