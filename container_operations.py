@@ -77,7 +77,7 @@ if __name__ == '__main__':
     if "run" in args.operation[0]:
         from docker.types import Mount
         repo_mount = Mount(target=f"/home/{args.user}/code", source=repo_root, type='bind')
-        result = client.containers.run(image=f"{args.tag}", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=True)
+        result = client.containers.run(image=f"{args.tag}", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=False)
         print(result.logs())
         print(f"container is running with the name: {result.name}, enter bash with:")
         print(f"docker exec -it {result.name} bash")
