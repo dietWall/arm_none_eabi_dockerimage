@@ -33,6 +33,13 @@ jobs:
       with:
         files: |
           test_results*.xml
+    
+    - name: Temporarily save Docker image
+      uses: actions/upload-artifact@v7
+      with:
+        name: arm_gcc_image
+        path: arm_gcc_image.tar
+        retention-days: 1
 
     # - name: Stop Container
     #   run: |
