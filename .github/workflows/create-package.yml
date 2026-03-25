@@ -1,0 +1,22 @@
+name: Build and Push Docker Image
+
+on:
+    workflow_dispatch:
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Log in to GitHub Container Registry
+          uses: docker/login-action@v4
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Push Docker image to GitHub Container Registry
+          run: |
+            docker push ghcr.io/dietwall/arm_gcc_image:latest

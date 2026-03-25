@@ -1,3 +1,4 @@
 wget
 docker
 pytest
+semver

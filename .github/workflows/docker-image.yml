@@ -37,13 +37,13 @@ jobs:
       run: |
         source venv/bin/activate && python3 container_operations.py -o stop
     
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v4
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Login to GitHub Container Registry
+    #   uses: docker/login-action@v4
+    #   with:
+    #     registry: ghcr.io
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Push Docker image to GitHub Container Registry
-      run: |
-        docker push ghcr.io/dietwall/arm_gcc_image:latest
+    # - name: Push Docker image to GitHub Container Registry
+    #   run: |
+    #     docker push ghcr.io/dietwall/arm_gcc_image:latest
