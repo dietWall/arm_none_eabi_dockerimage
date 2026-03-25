@@ -9,6 +9,7 @@ on:
 jobs:
 
   build:
+    permissions: write-all    #publish test results
     
     runs-on: ubuntu-latest
 
