@@ -6,6 +6,7 @@ on:
 jobs:
     
     build-and-test:
+        permissions: write-all
         uses: ./.github/workflows/docker-image.yml
 
     
