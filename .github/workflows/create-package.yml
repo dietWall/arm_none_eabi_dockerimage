@@ -23,12 +23,6 @@ jobs:
           with:
             name: arm_gcc_image
 
-        - name: is this a zipfile?
-          run: ls -la 
-        
-        - name: is this a zipfile?
-          run: ls -la arm_gcc_image.tar
-
         - name: Docker load
           run: |
             docker load -i arm_gcc_image.tar
