@@ -61,12 +61,19 @@ def get_labels() -> dict[str, str]:
     labels["org.opencontainers.image.description"] = "Docker image with arm-none-eabi-gcc, cmake, gdb-multiarch and other tools for embedded development"
     return labels
 
+def save_image(tag: str = default_tag, output_path: str = "image.tar"):
+    client = docker.from_env()
+    image = client.images.get(tag)
+    with open(output_path, "wb") as f:
+        for chunk in image.save(named=True):
+            f.write(chunk)
+    print(f"Saved image {tag} to {output_path}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--operation", "-o",
         help="operation to perform, can be one of: build, run, stop, test", 
-        choices=["build", "run", "stop", "test", "push"],
+        choices=["build", "run", "stop", "test", "push", "save"],
         action="append", nargs="+", required=True)
 
     parser.add_argument("--user", help="sets the username for the image user, defaults to current user if ommited", default="developer")
@@ -82,7 +89,7 @@ if __name__ == '__main__':
     client = docker.from_env()
     from version import get_version
     version = get_version(os.path.join(repo_root, "version"))
-    
+
     if "stop" in args.operation[0]:
         print(f"stopping all containers with image = {default_tag}")
         containers = client.containers.list(all=True, filters={"ancestor": f"{default_tag}"})
@@ -111,5 +118,8 @@ if __name__ == '__main__':
 
     if "test" in args.operation[0]:
         run_tests(tag=f"{args.tag}:{version}")
+
+    if "save" in args.operation[0]:
+        save_image(tag=f"{args.tag}:{version}", output_path=f"arm_gcc_image.tar")
 
     print("Done, exiting")

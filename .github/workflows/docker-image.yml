@@ -36,7 +36,8 @@ jobs:
     
     - name: Save Docker image to tar
       run: |
-        docker save ghcr.io/dietwall/arm_gcc_image:latest > arm_gcc_image.tar
+        #docker save ghcr.io/dietwall/arm_gcc_image:latest > arm_gcc_image.tar
+        source venv/bin/activate && python3 container_operations.py -o save --tag ghcr.io/dietwall/arm_gcc_image
 
     - name: Temporarily save Docker image
       uses: actions/upload-artifact@v7
