@@ -1,9 +1,10 @@
 #! /usr/bin/env python3
 
+import sys
+
 import docker
 import argparse
 import os
-
 from git_utils import *
 
 default_tag="ghcr.io/dietwall/arm_gcc_image"
@@ -31,12 +32,48 @@ def run_tests(tag: str = default_tag):
         raise Exception(f"Tests failed with code: {retcode}")
     print("All tests passed")
 
+def build_image(tag: str = default_tag, 
+        user: str = "developer", 
+        uid: int = os.getuid(), 
+        gid: int = os.getgid(),
+        labels: dict[str, str]|None = None
+        ):
+    client = docker.from_env()
+    buildsystem_dir = get_repo_root()
+    print(f"building image in {buildsystem_dir}, tagging with: {tag}")
+    try:
+        image, build_logs = client.images.build(path=buildsystem_dir, tag=f"{tag}", buildargs={"user":user, "uid": f"{uid}", "gid":f"{gid}"}, labels=labels)
+        # for streaming the logs in realtime, we need to use client.build instead of client.images.build, as of now it is good enough
+        # this one buffers and prints it afterwards
+        for chunk in build_logs:
+            if 'stream' in chunk:
+                for line in chunk['stream'].splitlines():
+                    print(line)
+        print(f"Built image with id: {image.id}")
+    except Exception as err:
+        print(f"error on build: {err}")
+
+def get_labels() -> dict[str, str]:
+    repo_root = get_repo_root()
+    labels = {}
+    labels["org.opencontainers.image.source"] = default_tag
+    labels["org.opencontainers.image.version"] = get_git_tag() 
+    labels["org.opencontainers.image.description"] = "Docker image with arm-none-eabi-gcc, cmake, gdb-multiarch and other tools for embedded development"
+    return labels
+
+def save_image(tag: str = default_tag, output_path: str = "image.tar"):
+    client = docker.from_env()
+    image = client.images.get(tag)
+    with open(output_path, "wb") as f:
+        for chunk in image.save(named=True):
+            f.write(chunk)
+    print(f"Saved image {tag} to {output_path}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--operation", "-o",
         help="operation to perform, can be one of: build, run, stop, test", 
-        choices=["build", "run", "stop", "test", "push"],
+        choices=["build", "run", "stop", "test", "push", "save"],
         action="append", nargs="+", required=True)
 
     parser.add_argument("--user", help="sets the username for the image user, defaults to current user if ommited", default="developer")
@@ -50,7 +87,9 @@ if __name__ == '__main__':
     repo_root = get_repo_root()
 
     client = docker.from_env()
-    
+    from version import get_version
+    version = get_version(os.path.join(repo_root, "version"))
+
     if "stop" in args.operation[0]:
         print(f"stopping all containers with image = {default_tag}")
         containers = client.containers.list(all=True, filters={"ancestor": f"{default_tag}"})
@@ -61,28 +100,26 @@ if __name__ == '__main__':
 
     if "build" in args.operation[0]:
         buildsystem_dir = repo_root
-        print(f"building image in {buildsystem_dir}, tagging with: {args.tag}")
+
+        print(f"building image in {buildsystem_dir}, tagging with: {args.tag}:{version}")
         try:
-            image, build_logs = client.images.build(path=buildsystem_dir, tag=f"{args.tag}", buildargs={"user":args.user, "uid": f"{args.uid}", "gid":f"{args.gid}"})
-            # for streaming the logs in realtime, we need to use client.build instead of client.images.build, as of now it is good enough
-            # this one buffers and prints it afterwards
-            for chunk in build_logs:
-                if 'stream' in chunk:
-                    for line in chunk['stream'].splitlines():
-                        print(line)
-            print(f"Built image with id: {image.id}")
+            build_image(tag=f"{args.tag}:{version}", user=args.user, uid=args.uid, gid=args.gid, labels=get_labels())
         except Exception as err:
             print(f"error on build: {err}")
+            sys.exit(1)
 
     if "run" in args.operation[0]:
         from docker.types import Mount
         repo_mount = Mount(target=f"/home/{args.user}/code", source=repo_root, type='bind')
-        result = client.containers.run(image=f"{args.tag}", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=False)
+        result = client.containers.run(image=f"{args.tag}:{version}", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=False)
         print(result.logs())
         print(f"container is running with the name: {result.name}, enter bash with:")
         print(f"docker exec -it {result.name} bash")
 
     if "test" in args.operation[0]:
-        run_tests(tag=args.tag)
+        run_tests(tag=f"{args.tag}:{version}")
+
+    if "save" in args.operation[0]:
+        save_image(tag=f"{args.tag}:{version}", output_path=f"arm_gcc_image.tar")
 
     print("Done, exiting")
