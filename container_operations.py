@@ -80,6 +80,8 @@ if __name__ == '__main__':
     repo_root = get_repo_root()
 
     client = docker.from_env()
+    from version import get_version
+    version = get_version(os.path.join(repo_root, "version"))
     
     if "stop" in args.operation[0]:
         print(f"stopping all containers with image = {default_tag}")
@@ -91,8 +93,7 @@ if __name__ == '__main__':
 
     if "build" in args.operation[0]:
         buildsystem_dir = repo_root
-        from version import get_version
-        version = get_version(os.path.join(repo_root, "version"))
+
         print(f"building image in {buildsystem_dir}, tagging with: {args.tag}:{version}")
         try:
             build_image(tag=f"{args.tag}:{version}", user=args.user, uid=args.uid, gid=args.gid, labels=get_labels())
@@ -103,12 +104,12 @@ if __name__ == '__main__':
     if "run" in args.operation[0]:
         from docker.types import Mount
         repo_mount = Mount(target=f"/home/{args.user}/code", source=repo_root, type='bind')
-        result = client.containers.run(image=f"{args.tag}", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=False)
+        result = client.containers.run(image=f"{args.tag}:{version}", detach=True, stdin_open=True, stdout=True, mounts=[repo_mount],remove=False)
         print(result.logs())
         print(f"container is running with the name: {result.name}, enter bash with:")
         print(f"docker exec -it {result.name} bash")
 
     if "test" in args.operation[0]:
-        run_tests(tag=args.tag)
+        run_tests(tag=f"{args.tag}:{version}")
 
     print("Done, exiting")
