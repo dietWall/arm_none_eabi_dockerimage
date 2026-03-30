@@ -73,7 +73,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--operation", "-o",
         help="operation to perform, can be one of: build, run, stop, test", 
-        choices=["build", "run", "stop", "test", "push", "save"],
+        choices=["build", "run", "stop", "test", "push", "save", "tag"],
         action="append", nargs="+", required=True)
 
     parser.add_argument("--user", help="sets the username for the image user, defaults to current user if ommited", default="developer")
@@ -121,5 +121,10 @@ if __name__ == '__main__':
 
     if "save" in args.operation[0]:
         save_image(tag=f"{args.tag}:{version}", output_path=f"arm_gcc_image.tar")
+    
+    if "tag" in args.operation[0]:
+        image = client.images.get(f"{args.tag}:{version}")
+        image.tag(f"{args.tag}:latest")
+        print(f"Tagged image {args.tag}:{version} as {args.tag}:latest")
 
     print("Done, exiting")
