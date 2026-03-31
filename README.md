@@ -38,30 +38,30 @@ to run a simple compilation test.
 ## container_operations.py
 This is the main script, that implements some operations for handling the images and containers. 
 
-Other options for container_operations.py, all are optional and have defaults set:
---tag [IMAGE_TAG] : overrides the default tag for the image
---user [USERNAME] : provides a username for the image, default=developer  
---uid [UID] : provides a uid for the docker image, default is the currently logged in user (required for github runners as an example)
---gid [UID] : provides a group id for the docker image, default is the currently logged in user  
+Other options for container_operations.py, all are optional and have defaults set:  
+--tag [IMAGE_TAG] : overrides the default tag for the image  
+--user [USERNAME] : provides a username for the image, default=developer   
+--uid [UID] : provides a uid for the docker image, default is the currently logged in user (required for github runners as an example)  
+--gid [UID] : provides a group id for the docker image, default is the currently logged in user    
 
-## Other Operations:
-build: builds the image  
+## Other Operations:  
+build: builds the image   
 stop: stops all container with the default (or provided with --tag) tag  
 test: starts a pytest process that compiles a small application in the container (container must be already running!)  
 push: used in github actions for publishing  
-save: saves the image to a tar file (used in github actions)  
+save: saves the image to a tar file (used in github actions)   
 run: starts a detached container and leaves it running  
 
 The Image is reused in different repositories by copying template/devcontainer.json to <repo-root>/.devcontainer/devcontainer.json. If VsCode has the the Dev Containers installed, it will ask you if you want to reopen this in the container.
 
 
 ## Developing applications:
-This is my base image, so if you want to use it for developing applications, it should be enriched with required libraries.
+This is my base image, so if you want to use it for developing applications, it should be enriched with required libraries.  
 On my other repos you will probably find some more useful images with HAL/RTOS installed. So the applications can easily link to this libs.    
 
 However:
 You need VSCode with devcontainer extension installed: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 
-After copying/creating devcontainer file, you need to open your repository root directory and run vscode. If everything works out, you should see a notification whether you want to reopen the directory inside the devcontainer definition.
+After copying/creating devcontainer file, you need to open your repository root directory and run vscode. If everything works out, you should see a notification whether you want to reopen the directory inside the devcontainer.
 
   
