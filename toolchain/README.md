@@ -1,7 +1,7 @@
 # Toolchain file
 
 ## Overview
-This directory is copied to /home/<user>/toolchain directory in docker image.
+This directory is copied to /home/<user>/toolchain/ directory in docker image.
 This file declares the installed tools for cmake with arm-none-eabi-gcc.
 
 To use on your project, add:
