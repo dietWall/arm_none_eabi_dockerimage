@@ -45,6 +45,7 @@ Other options for container_operations.py, all are optional and have defaults se
 --gid [UID] : provides a group id for the docker image, default is the currently logged in user    
 
 ## Other Operations:  
+all operations/actions have to be preceded with a single --operation / -o  
 build: builds the image   
 stop: stops all container with the default (or provided with --tag) tag  
 test: starts a pytest process that compiles a small application in the container (container must be already running!)  
